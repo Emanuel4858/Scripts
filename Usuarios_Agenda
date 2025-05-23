@@ -1,0 +1,23 @@
+#!/bin/bash
+
+ARQUIVO="agenda.csv"
+
+if [ ! -f "$ARQUIVO"]; then
+	echo "\"Nome Completo\",\"Telefone\",\"Email\"" > "$ARQUIVO"
+fi
+
+DADOS=$(yad --form --title="Adicionar Contato"\
+	--field="Nome Completo" \
+	--field="Telefone" \
+	--field="Email" \
+	"" "" "")
+
+if [ -z "$DADOS"]; then
+	yad --error --text="Operação cancelada"
+	exit 1
+fi
+
+IFS="|" read -r nome telefone email <<< "$DADOS"
+echo "\"$nome\", \"$telefone\", \"$email\"" >> "$ARQUIVO"
+total=$(($(wc -l < "$ARQUIVO") - 1))
+yad --info --text="Contato adicionado com sucesso"\nTotal de contatos: $total"
