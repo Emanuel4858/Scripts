@@ -1,0 +1,25 @@
+#!/bin/bash
+
+DIR=$(yad --file-selection --directory --title="Selecione o diretório")
+if [ -z "$DIR"]; then
+	yad --error --text="Operação abortada!!! O sistema se salvou por pouco da destruição total!"
+	exit 1
+fi
+
+ARQUIVOS=$(yad --list \
+	--title="Selecione arquivos para deletar" \
+	--column="Arquivo" $(ls -1 "$DIR") \
+	--multiple \
+	--separator=" ")
+
+if [ -z "$ARQUIVOS"]; then
+	yad --error --text="Nenhum arquivo selecionado"
+	exit 1
+fi
+
+count=0
+for arquivo in $ARQUIVOS; do
+	if rm "$DIR/$arquivo" 2>/dev/null; then
+		((count++))
+	fi
+done

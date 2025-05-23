@@ -1,0 +1,18 @@
+#!/bin/bash
+if [ "$euid" -eq 0]; then
+	yad --error --text="Este Script não deve ser executado como root!"
+	exit 1
+fi
+
+ARQUIVO=$(yad --file-selection --title="Escolha o arquivo a deletar")
+
+if [ -z "$ARQUIVO" ]; then
+	yad  --error --text="Operação cancelada"
+	exit 1
+fi
+
+if rm "$ARQUIVO" 2>/dev/null; then
+	yad --info --text="Arquivo '$ARQUIVO' deletado com sucesso!"
+else
+	yad --error --text="Error ao tentar deletar o arquivo '$ARQUIVO'."
+fi
